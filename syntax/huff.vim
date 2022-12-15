@@ -2,10 +2,14 @@ if exists("b:current_syntax")
   finish
 endif
 
+" Comment contained keywords
+syntax keyword huffTodos contained TODO XXX FIXME NOTE
+hi link huffTodos Todo
+
 " comment
 syn region huffComment start="//" end="$"
 syn region huffComment start="/\*" end="\*/"
-hi def link huffComment Comment
+hi link huffComment Comment
 
 " natspec
 syn match huffNatspecTag "\v\@title>" contained
@@ -16,18 +20,21 @@ syn match huffNatspecTag "\v\@param>" contained
 syn match huffNatspecTag "\v\@return>" contained
 syn region huffNatspec start="/\*\*" end="\*/" contains=huffNatspecTag
 syn region huffNatspec start="///" end="$" contains=huffNatspecTag
-hi def link huffNatspec Comment
 hi def link huffNatspecTag Keyword
 
 " import
 syn match huffInclude "\v#include>"
 hi def link huffInclude Include
 
+" constants
 " number literal
 syn match huffNumberDecimal "\v<\d+(\.\d+)?>"
 syn match huffNumberHex "\v<0[xX][a-fA-F0-9]+>"
-hi def link huffNumberDecimal Number
-hi def link huffNumberHex Number
+hi def link huffNumberDecimal Constant
+hi def link huffNumberHex Constant
+" Labels
+syntax match huffLabel "^\i*:$"
+highlight link huffLabel Type
 
 " define
 syn match huffDefine '#define' contained
@@ -54,7 +61,7 @@ hi def link huffTakes Keyword
 hi def link huffReturns Keyword
 
 syn match huffIdentifier "\v\i" contained
-hi def link huffIdentifier Identifier
+hi def link huffIdentifier Constant
 
 syn match huffInterfacePrimitives "\v<(address|string\d*|bytes\d*|int\d*|uint\d*|bool|hash\d*)>" contained
 hi def link huffInterfacePrimitives Type
@@ -68,18 +75,105 @@ syn match huffInterfaceFunction "\v#define\s+function\s+\i+\(.*\)" transparent c
 syn match huffInterfaceEvent "\v#define\s+event\s+\i+\(.*\)" transparent contains=huffDefine,huffEvent,huffIdentifier,huffInterfacePrimitives
 
 " opcodes
-syn keyword huffOpcodesIO sstore sload mstore8 mstore mload pop msize balance address returndatacopy returndatasize extcodecopy extcodesize gasprice caller origin gaslimit difficulty number timestamp coinbase blockhash codecopy codesize calldatacopy calldatasize calldataload callvalue gas 
-syn keyword huffOpcodesSideEffects log4 log3 log2 log1 log0 jumpdest getpc jumpi jump create2 staticcall delegatecall callcode call create 
-syn keyword huffOpcodesCalculation not xor or and ror rol sar shr shl keccak sha3 byte iszero eq sgt slt gt lt signextend exp mulmod addmod smod mod sdiv div sub mul add 
-syn keyword huffOpcodesStop selfdestruct invalid revert return stop 
-syn match huffOpcodesStack "\v(swap1|dup1)[0-6]" 
-syn match huffOpcodesStack "\v(swap|dup)[1-9]" 
-syn match huffOpcodesStack "\vpush3[0-2]|push[1-2][0-9]|push[1-9]" 
-hi def link huffOpcodesIO Keyword
-hi def link huffOpcodesSideEffects Keyword
-hi def link huffOpcodesCalculation Keyword
-hi def link huffOpcodesStop Keyword
-hi def link huffOpcodesStack Keyword
+" Environment opcodes
+syn keyword huffEnvOpcode
+	\ address 
+	\ balance 
+	\ origin
+	\ caller
+	\ callvalue
+	\ calldataload
+	\ calldatasize
+	\ calldatacopy
+	\ codesize
+	\ codecopy
+	\ gasprice
+	\ returndatasize
+	\ returndatacopy
+	\ blockhash
+	\ coinbase
+	\ timestamp
+	\ number
+	\ difficulty
+	\ gaslimit
+	\ chainid
+	\ selfbalance
+	\ basefee
+hi link huffEnvOpcode Special
+
+" Trie opcodes
+syn keyword huffTrieOpcode
+	\ extcodesize
+	\ extcodecopy
+	\ extcodehash
+	\ sload
+	\ sstore
+	\ selfdestruct
+hi link huffTrieOpcode Special
+
+" Call opcodes
+syn keyword huffCallOpcode
+	\ create
+	\ call
+	\ callcode
+	\ delegatecall
+	\ create2
+	\ staticcall
+hi link huffCallOpcode Special
+
+" Push opcodes
+syn match huffRegularOpcode
+	\ "\<push\(3[1-2]\|[1-9]\|[1-2][0-9]\)\>"
+	\ nextgroup=huffNumberDecimal,huffNumberHex
+	\ skipwhite
+
+" Regular opcodes
+syntax match huffRegularOpcode "\<swap\(1[0-6]\|[1-9]\)\>"
+syntax match huffRegularOpcode "\<dup\(1[0-6]\|[1-9]\)\>"
+syntax match huffRegularOpcode "\<log\([0-4]\)\>"
+
+syntax keyword huffRegularOpcode
+	\ stop
+	\ add
+	\ mul
+	\ sub
+	\ div
+	\ sdiv
+	\ mod
+	\ smod
+	\ addmod
+	\ mulmod
+	\ exp
+	\ signextend
+	\ lt
+	\ gt
+	\ slt
+	\ sgt
+	\ eq
+	\ iszero
+	\ and
+	\ or
+	\ xor
+	\ not
+	\ byte
+	\ shl
+	\ shr
+	\ sar
+	\ keccak256
+	\ pop
+	\ mload
+	\ mstore
+	\ mstore8
+	\ jump
+	\ jumpi
+	\ pc
+	\ msize
+	\ gas
+	\ jumpdest
+	\ revert
+	\ invalid
+	\ return
+hi link huffRegularOpcode Statement
 
 syn match huffTemplateCall "\v\<\s*\i+\s*\>" transparent contains=huffIdentifier
 syn match huffConstantRef "\v\[[A-Z_]+\]" transparent contains=huffIdentifier
