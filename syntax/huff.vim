@@ -77,8 +77,8 @@ syn match huffInterfaceEvent "\v#define\s+event\s+\i+\(.*\)" transparent contain
 " opcodes
 " Environment opcodes
 syn keyword huffEnvOpcode
-	\ address 
-	\ balance 
+	\ address
+	\ balance
 	\ origin
 	\ caller
 	\ callvalue
@@ -134,6 +134,7 @@ syntax match huffRegularOpcode "\<log\([0-4]\)\>"
 
 syntax keyword huffRegularOpcode
 	\ stop
+	\ push0
 	\ add
 	\ mul
 	\ sub
