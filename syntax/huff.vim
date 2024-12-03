@@ -40,6 +40,7 @@ highlight link huffLabel Type
 syn match huffDefine '#define' contained
 syn keyword huffMacro macro contained
 syn keyword huffFn fn contained
+syn keyword huffTable table contained
 syn keyword huffJumptable jumptable contained
 syn keyword huffJumptablePacked jumptable__packed contained
 syn keyword huffError error contained
@@ -51,6 +52,7 @@ syn keyword huffReturns returns contained
 hi def link huffDefine Define
 hi def link huffMacro Keyword
 hi def link huffFn Keyword
+hi def link huffTable Keyword
 hi def link huffJumptable Keyword
 hi def link huffJumptablePacked Keyword
 hi def link huffError Keyword
@@ -68,6 +70,7 @@ hi def link huffInterfacePrimitives Type
 
 syn match huffDeclMacro "\v#define\s+macro\s+\i+\s*\((\i+(,\s*\i+)*)?\)\s*\=\s*takes\s*\(\d+\)\s*returns\s*\(\d+\)" transparent contains=huffDefine,huffMacro,huffIdentifier,huffTakes,huffReturns
 syn match huffDeclFn "\v#define\s+fn\s+\i+\s*\((\i+(,\s*\i+)*)?\)\s*\=\s*takes\s*\(\d+\)\s*returns\s*\(\d+\)" transparent contains=huffDefine,huffFn,huffIdentifier,huffTakes,huffReturns
+syn match huffDeclTable "\v#define\s+table\s+\i+>" transparent contains=huffDefine,huffTable,huffIdentifier
 syn match huffDeclJumptable "\v#define\s+jumptable(__packed)?\s+\i+>" transparent contains=huffDefine,huffJumtable,huffJumptablePacked,huffIdentifier
 syn match huffConstantDef "\v#define\s+constant\s+[A-Za-z_]\w*" transparent contains=huffDefine,huffConstant,huffIdentifier,huffTakes,huffReturns
 syn match huffDefError "\v#define\s+error\s+\i+>" transparent contains=huffDefine,huffError,huffIdentifier
@@ -99,6 +102,8 @@ syn keyword huffEnvOpcode
 	\ chainid
 	\ selfbalance
 	\ basefee
+	\ blobhash
+	\ blobbasefee
 hi link huffEnvOpcode Special
 
 " Trie opcodes
@@ -165,6 +170,9 @@ syntax keyword huffRegularOpcode
 	\ mload
 	\ mstore
 	\ mstore8
+	\ mcopy
+	\ tload
+	\ tstore
 	\ jump
 	\ jumpi
 	\ pc
